@@ -1,0 +1,5 @@
+.env
+.vscode
+charts
+node_modules
+logs
