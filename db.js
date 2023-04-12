@@ -1,14 +1,14 @@
-const Sequelize = require('sequelize');
-const { DataTypes } = require('sequelize');
-require('dotenv').config();
+const Sequelize = require('sequelize')
+const { DataTypes } = require('sequelize')
+require('dotenv').config()
 
 async function connectDb() {
     // Define the database connection
-    const DB_NAME = process.env.DB_NAME_OVERRIDE || process.env.DB_NAME;
-    const sequelize = new Sequelize(DB_NAME, process.env.DB_USER , process.env.DB_PW, {
+    const DB_NAME = process.env.DB_NAME_OVERRIDE || process.env.DB_NAME
+    sequelize = new Sequelize(DB_NAME, process.env.DB_USER , process.env.DB_PW, {
         host: process.env.DB_HOST,
         dialect: 'mysql'
-    });
+    })
 
     // Define the model for the submissions table
     const Submission = sequelize.define('submission', {
@@ -20,7 +20,7 @@ async function connectDb() {
             autoIncrement: false
         },
         type: DataTypes.STRING
-    });
+    })
 
     // Define the model for the changing fields table
     const SubmissionData = sequelize.define('submission_data', {
@@ -34,7 +34,7 @@ async function connectDb() {
         view_count: DataTypes.INTEGER,
         rate_all_count: DataTypes.INTEGER,
         rate_member_count: DataTypes.INTEGER
-    });
+    })
 
     const Series = sequelize.define('series', {
         id: {
@@ -44,22 +44,22 @@ async function connectDb() {
         },
         title: DataTypes.STRING,
         is_public: DataTypes.BOOLEAN
-    });
+    })
 
     // Define the association between the tables
     Submission.hasMany(SubmissionData, {
         foreignKey: 'submissionId',
         as: 'submissionData'
-    });
-    SubmissionData.belongsTo(Submission);
+    })
+    SubmissionData.belongsTo(Submission)
     Series.hasMany(Submission,{
         foreignKey: 'seriesId'
-    });
-    Submission.belongsTo(Series);
+    })
+    Submission.belongsTo(Series)
 
-    await sequelize.sync();
+    await sequelize.sync()
 
-    return {Submission,SubmissionData,Series}
+    return {Submission,SubmissionData,Series,sequelize}
 }
 
 module.exports = connectDb()

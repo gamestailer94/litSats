@@ -1,11 +1,11 @@
 require('dotenv').config()
-const axios = require('axios');
+const axios = require('axios')
 
-const { wrapper } = require('axios-cookiejar-support');
-const { CookieJar } = require('tough-cookie');
+const { wrapper } = require('axios-cookiejar-support')
+const { CookieJar } = require('tough-cookie')
 
-const jar = new CookieJar();
-const loginClient = wrapper(axios.create({ jar }));
+const jar = new CookieJar()
+const loginClient = wrapper(axios.create({ jar }))
 
 let Submission, SubmissionData, Series, JWT
 
@@ -14,7 +14,7 @@ async function connectDb() {
     try {
         ({Submission, SubmissionData, Series} = await require('./db.js'))
     } catch (error) {
-        console.error(error);
+        console.error(error)
         process.exit()
     }
 }
@@ -153,12 +153,16 @@ connectDb().then(async () => {
             promises.push(crawlPublicSeries(ser.id))
         }
 
-        // crawl private submissions
-        JWT = await login()
-        promises.push(crawlPrivateApi())
+        if(process.env.USER && process.env.PASS){
+            // crawl private submissions
+            JWT = await login()
+            promises.push(crawlPrivateApi())
+        }else {
+            console.log('No user credentials provided. Only public submissions will be crawled.')
+        }
 
         return Promise.all(promises)
     } catch (error) {
-        console.error(error);
+        console.error(error)
     }
 })

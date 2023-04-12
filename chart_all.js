@@ -7,13 +7,13 @@ const { ChartJSNodeCanvas } = require('chartjs-node-canvas')
 
 let Submission, SubmissionData, Series
 
-const width = 1000; //px
-const height = 800; //px
-const backgroundColour = '#eeeee4'; 
+const width = 1000 //px
+const height = 800 //px
+const backgroundColour = '#eeeee4'
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, backgroundColour, plugins: {
   modern: ['chartjs-adapter-moment', 'chartjs-plugin-autocolors']
   }
-});
+})
 
 const scales = {
   xAxes: {
@@ -198,7 +198,7 @@ async function connectDb() {
   try {
     ({Submission, SubmissionData, Series} = await require('./db.js'))
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
