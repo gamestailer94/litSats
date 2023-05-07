@@ -80,9 +80,13 @@ async function generateGraphs(from) {
         const subTitle = sub.title
         const where = {}
         // filter if from is not all_time
-        if (from !== 'all_time') {
+        if (from === 'last_day') {
           where.createdAt = {
             [Op.gte]: moment().subtract(1, 'day').format()
+          }
+        } else if (from === 'last_month') {
+          where.createdAt = {
+            [Op.gte]: moment().subtract(1, 'month').format()
           }
         }
         data[serTitle][subTitle] = buildData(await sub.getSubmissionData({
@@ -206,7 +210,7 @@ async function connectDb() {
 connectDb().then(() => {
 
   // generate for all time and since last day
-  for (let from of ['all_time', 'last_day']) {
+  for (let from of ['all_time', 'last_day', 'last_month']) {
     generateGraphs(from)
   }
 })
